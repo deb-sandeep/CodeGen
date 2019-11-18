@@ -1,0 +1,20 @@
+envVars :
+    baseDir : /home/sandeep/temp
+    outputBaseDir : /home/sandeep/temp/output
+    cityName : Mumbai
+
+templateDir : ${envVars.baseDir}/templates
+
+mkdirsConfig :
+    baseDirectory : ${envVars.baseDir}
+    directories :
+        - src/main/java
+        - src/main/resources
+    
+transformations :
+   - template : controller.st
+     destination : ${envVars.outputBaseDir}/jee/controller.js
+     params :
+        name : JEEMainController
+        length : 23
+        
