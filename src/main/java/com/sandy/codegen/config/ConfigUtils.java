@@ -22,7 +22,7 @@ public class ConfigUtils {
     private static final String CFG_VAR_PATTERN = "\\$\\{([^\\{]*)}+" ;
 
     public static String getFormattedMapContents( String name, 
-                                                  Map<String, String> map, 
+                                                  Map<String, Object> map, 
                                                   String indent ) {
         
         StringBuilder builder = new StringBuilder() ;

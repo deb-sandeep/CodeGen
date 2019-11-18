@@ -13,16 +13,16 @@ public class CodeGenConfig {
     
     static final Logger log = Logger.getLogger( CodeGenConfig.class ) ;
 
-    private Map<String, String> envVars = null ;
+    private Map<String, Object> envVars = null ;
     private String templateDir = null ;
     private MkdirsConfig mkdirsConfig = null ;
     private List<TransformationConfig> transformations = null ;
 
-    public Map<String, String> getEnvVars() {
+    public Map<String, Object> getEnvVars() {
         return envVars ;
     }
 
-    public void setEnvVars( Map<String, String> envVars ) {
+    public void setEnvVars( Map<String, Object> envVars ) {
         this.envVars = envVars ;
     }
     
@@ -52,9 +52,11 @@ public class CodeGenConfig {
 
     public void enrichValues() throws Exception {
         for( String key : envVars.keySet() ) {
-            String value = envVars.get( key ) ;
-            value = enrichString( value, this ) ;
-            envVars.put( key, value ) ;
+            Object value = envVars.get( key ) ;
+            if( value instanceof String ) {
+                String valueStr = enrichString( (String)value, this ) ;
+                envVars.put( key, valueStr ) ;
+            }
         }
         templateDir = enrichString( templateDir, this ) ;
         mkdirsConfig.setParentConfig( this ) ;

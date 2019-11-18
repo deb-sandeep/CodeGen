@@ -10,7 +10,7 @@ public class TransformationConfig {
     
     private String template = null ;
     private String destination = null ;
-    private Map<String, String> params = null ;
+    private Map<String, Object> params = null ;
     
     public CodeGenConfig getParentConfig() {
         return this.parentConfig ;
@@ -34,10 +34,10 @@ public class TransformationConfig {
         this.destination = destination ;
     }
     
-    public Map<String, String> getParams() {
+    public Map<String, Object> getParams() {
         return params ;
     }
-    public void setParams( Map<String, String> params ) {
+    public void setParams( Map<String, Object> params ) {
         this.params = params ;
     }
     
@@ -47,9 +47,11 @@ public class TransformationConfig {
         template = enrichString( template, parentConfig ) ;
         destination = enrichString( destination, parentConfig ) ;
         for( String key : params.keySet() ) {
-            String value = params.get( key ) ;
-            value = enrichString( value, parentConfig ) ;
-            params.put( key, value ) ;
+            Object value = params.get( key ) ;
+            if( value instanceof String ) {
+                String valueStr = enrichString( (String)value, this.getParentConfig() ) ;
+                params.put( key, valueStr ) ;
+            }
         }
     }
 
