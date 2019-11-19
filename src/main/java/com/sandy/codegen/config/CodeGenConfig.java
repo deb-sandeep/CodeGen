@@ -52,24 +52,34 @@ public class CodeGenConfig {
         enrichMap( env, this ) ;
         templateDir = enrichString( templateDir, this ) ;
         
-        mkdirsConfig.setParentConfig( this ) ;
-        mkdirsConfig.enrichValues() ;
-        
-        for( TransformationConfig tCfg : transformations ) {
-            tCfg.setParentConfig( this ) ;
-            tCfg.enrichValues() ;
+        if( mkdirsConfig != null ) {
+            mkdirsConfig.setParentConfig( this ) ;
+            mkdirsConfig.enrichValues() ;
+        }
+
+        if( transformations != null ) {
+            for( TransformationConfig tCfg : transformations ) {
+                tCfg.setParentConfig( this ) ;
+                tCfg.enrichValues() ;
+            }
         }
     }
     
     public String toString() {
         StringBuilder builder = new StringBuilder( "CodeGenConfig -> {\n" ) ;
         builder.append( getFormattedMapContents( "baseAttributes", env, INDENT1 ) )
-               .append( INDENT1 + "templateDir : " + templateDir + "\n" )
-               .append( mkdirsConfig.getFormattedString( INDENT1 ) ) ;
+               .append( INDENT1 + "templateDir : " + templateDir + "\n" ) ;
         
-        for( TransformationConfig tCfg : transformations ) {
-            builder.append( tCfg.getFormattedString( INDENT1 ) + "\n" ) ; 
+        if( mkdirsConfig != null ) {
+            builder.append( mkdirsConfig.getFormattedString( INDENT1 ) ) ;
         }
+        
+        if( transformations != null ) {
+            for( TransformationConfig tCfg : transformations ) {
+                builder.append( tCfg.getFormattedString( INDENT1 ) + "\n" ) ; 
+            }
+        }
+        
         builder.append( "}\n" ) ;
         
         return builder.toString() ;

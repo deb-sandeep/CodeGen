@@ -25,6 +25,8 @@ public class ConfigUtils {
                                                   Map<String, Object> map, 
                                                   String indent ) {
         
+        if( map == null || map.isEmpty() ) return "" ;
+        
         StringBuilder builder = new StringBuilder() ;
         builder.append( indent + name + " -> {\n" ) ;
         for( String key : map.keySet() ) {
@@ -38,6 +40,9 @@ public class ConfigUtils {
 
     public static String getFormattedListContents( List<? extends Object> list,
                                                    String indent ) {
+        
+        if( list == null || list.isEmpty() ) return "" ;
+        
         StringBuilder builder = new StringBuilder() ;
         for( Object listItem : list ) {
             builder.append( "\n" + indent + "- " + listItem ) ;
@@ -49,6 +54,8 @@ public class ConfigUtils {
     public static void enrichMap( Map map, 
                                   CodeGenConfig config ) 
         throws Exception {
+        
+        if( map == null ) return ;
         
         for( Object key : map.keySet() ) {
             Object value = map.get( key ) ;
@@ -73,6 +80,8 @@ public class ConfigUtils {
     public static void enrichList( List list,
                                    CodeGenConfig config ) 
         throws Exception {
+        
+        if( list == null ) return ;
         
         for( int i=0; i<list.size(); i++ ) {
             Object value = list.get( i ) ;
