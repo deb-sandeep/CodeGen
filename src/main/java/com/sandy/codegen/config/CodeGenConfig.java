@@ -1,8 +1,6 @@
 package com.sandy.codegen.config;
 
-import static com.sandy.codegen.config.ConfigUtils.INDENT1 ;
-import static com.sandy.codegen.config.ConfigUtils.enrichString ;
-import static com.sandy.codegen.config.ConfigUtils.getFormattedMapContents ;
+import static com.sandy.codegen.config.ConfigUtils.*  ;
 
 import java.util.List ;
 import java.util.Map ;
@@ -51,14 +49,9 @@ public class CodeGenConfig {
     }
 
     public void enrichValues() throws Exception {
-        for( String key : envVars.keySet() ) {
-            Object value = envVars.get( key ) ;
-            if( value instanceof String ) {
-                String valueStr = enrichString( (String)value, this ) ;
-                envVars.put( key, valueStr ) ;
-            }
-        }
+        enrichMap( envVars, this ) ;
         templateDir = enrichString( templateDir, this ) ;
+        
         mkdirsConfig.setParentConfig( this ) ;
         mkdirsConfig.enrichValues() ;
         

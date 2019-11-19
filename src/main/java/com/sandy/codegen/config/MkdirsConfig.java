@@ -1,10 +1,10 @@
 package com.sandy.codegen.config;
 
 import static com.sandy.codegen.config.ConfigUtils.INDENT3 ;
+import static com.sandy.codegen.config.ConfigUtils.enrichList ;
 import static com.sandy.codegen.config.ConfigUtils.enrichString ;
 import static com.sandy.codegen.config.ConfigUtils.getFormattedListContents ;
 
-import java.util.ArrayList ;
 import java.util.List ;
 
 public class MkdirsConfig {
@@ -41,12 +41,7 @@ public class MkdirsConfig {
         throws Exception {
         
         this.baseDirectory = enrichString( this.baseDirectory, parentConfig ) ;
-        
-        List<String> enrichedDirectories = new ArrayList<>() ;
-        for( String dir : directories ) {
-            enrichedDirectories.add( enrichString( dir, parentConfig ) ) ;
-        }
-        this.directories = enrichedDirectories ;
+        enrichList( this.directories, parentConfig ) ;
     }
     
     public String getFormattedString( String indent ) {

@@ -45,6 +45,47 @@ public class ConfigUtils {
         return builder.toString() ;
     }
 
+    @SuppressWarnings( { "unchecked", "rawtypes" } )
+    public static void enrichMap( Map map, 
+                                  CodeGenConfig config ) 
+        throws Exception {
+        
+        for( Object key : map.keySet() ) {
+            Object value = map.get( key ) ;
+            if( value instanceof String ) {
+                String enrichedStrVal = enrichString( (String)value, config ) ;
+                map.put( key, enrichedStrVal ) ;
+            }
+            else if( value instanceof List ) {
+                List list = ( List )value ;
+                enrichList( list, config ) ;
+            }
+            else if( value instanceof Map ) {
+                enrichMap( ( Map )value, config ) ;
+            }
+            else {
+                log.debug( value.getClass().getName() );
+            }
+        }
+    }
+    
+    @SuppressWarnings( { "unchecked", "rawtypes" } )
+    public static void enrichList( List list,
+                                   CodeGenConfig config ) 
+        throws Exception {
+        
+        for( int i=0; i<list.size(); i++ ) {
+            Object value = list.get( i ) ;
+            if( value instanceof String ) {
+                String enrichedStrVal = enrichString( (String)value, config ) ;
+                list.set( i, enrichedStrVal ) ;
+            }
+            else if( value instanceof List<?> ) {
+                enrichList( ( List )value, config ) ;
+            }
+        }
+    }
+    
     public static String enrichString( String input, CodeGenConfig config ) 
         throws Exception {
         

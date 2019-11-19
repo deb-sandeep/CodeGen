@@ -46,13 +46,7 @@ public class TransformationConfig {
         
         template = enrichString( template, parentConfig ) ;
         destination = enrichString( destination, parentConfig ) ;
-        for( String key : params.keySet() ) {
-            Object value = params.get( key ) ;
-            if( value instanceof String ) {
-                String valueStr = enrichString( (String)value, this.getParentConfig() ) ;
-                params.put( key, valueStr ) ;
-            }
-        }
+        enrichMap( params, parentConfig ) ;
     }
 
     public String getFormattedString( String indent ) {
