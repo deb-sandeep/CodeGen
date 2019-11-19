@@ -11,17 +11,17 @@ public class CodeGenConfig {
     
     static final Logger log = Logger.getLogger( CodeGenConfig.class ) ;
 
-    private Map<String, Object> envVars = null ;
+    private Map<String, Object> env = null ;
     private String templateDir = null ;
     private MkdirsConfig mkdirsConfig = null ;
     private List<TransformationConfig> transformations = null ;
 
-    public Map<String, Object> getEnvVars() {
-        return envVars ;
+    public Map<String, Object> getEnv() {
+        return env ;
     }
 
-    public void setEnvVars( Map<String, Object> envVars ) {
-        this.envVars = envVars ;
+    public void setEnv( Map<String, Object> envVars ) {
+        this.env = envVars ;
     }
     
     public String getTemplateDir() {
@@ -49,7 +49,7 @@ public class CodeGenConfig {
     }
 
     public void enrichValues() throws Exception {
-        enrichMap( envVars, this ) ;
+        enrichMap( env, this ) ;
         templateDir = enrichString( templateDir, this ) ;
         
         mkdirsConfig.setParentConfig( this ) ;
@@ -63,7 +63,7 @@ public class CodeGenConfig {
     
     public String toString() {
         StringBuilder builder = new StringBuilder( "CodeGenConfig -> {\n" ) ;
-        builder.append( getFormattedMapContents( "baseAttributes", envVars, INDENT1 ) )
+        builder.append( getFormattedMapContents( "baseAttributes", env, INDENT1 ) )
                .append( INDENT1 + "templateDir : " + templateDir + "\n" )
                .append( mkdirsConfig.getFormattedString( INDENT1 ) ) ;
         

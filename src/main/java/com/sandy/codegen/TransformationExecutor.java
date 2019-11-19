@@ -49,7 +49,7 @@ public class TransformationExecutor {
         String templateContents = getTemplateContents() ;
         ST stringTemplate = new ST( templateContents, '$', '$' ) ;
         
-        stringTemplate.add( "envVars", config.getParentConfig().getEnvVars() ) ;
+        stringTemplate.add( "env", config.getParentConfig().getEnv() ) ;
         for( String key : config.getParams().keySet() ) {
             stringTemplate.add( key, config.getParams().get( key ) ) ;
         }
