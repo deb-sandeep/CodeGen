@@ -47,7 +47,7 @@ public class CodeGenConfig {
     public void setTransformations( List<TransformationConfig> transformations ) {
         this.transformations = transformations ;
     }
-
+    
     public void enrichValues() throws Exception {
         enrichMap( env, this ) ;
         templateDir = enrichString( templateDir, this ) ;

@@ -2,12 +2,13 @@ package com.sandy.codegen;
 
 import java.io.File ;
 
+import org.antlr.stringtemplate.StringTemplate ;
 import org.apache.commons.io.FileUtils ;
 import org.apache.log4j.Logger ;
-import org.stringtemplate.v4.ST ;
 
 import com.sandy.codegen.config.CodeGenConfig ;
 import com.sandy.codegen.config.TransformationConfig ;
+import com.sandy.codegen.templating.STManager ;
 import com.sandy.common.util.StringUtil ;
 
 public class TransformationExecutor {
@@ -15,15 +16,18 @@ public class TransformationExecutor {
     static final Logger log = Logger.getLogger( TransformationExecutor.class ) ;
     
     private TransformationConfig config = null ;
+    private STManager stManager = null ;
     
     public TransformationExecutor( TransformationConfig config ) {
         this.config = config ;
+        this.stManager = STManager.instance() ;
+        this.stManager.initialize( this.config.getParentConfig() ) ;
     }
     
     public void execute() throws Exception {
         
-        ST st = getStringTemplate() ;
-        String transformedContent = st.render() ;    
+        StringTemplate st = getContextualizedStringTemplate() ;
+        String transformedContent = st.toString() ;    
 
         if( StringUtil.isEmptyOrNull( config.getDestination() ) ) {
             log.debug( "Transformed content -> \n" ) ;
@@ -44,58 +48,30 @@ public class TransformationExecutor {
         return destFile ;
     }
     
-    private ST getStringTemplate() 
+    private StringTemplate getContextualizedStringTemplate() 
         throws Exception {
         
-        String templateContents = getTemplateContents() ;
         try {
-            ST stringTemplate = new ST( templateContents, '%', '%' ) ;
+            StringTemplate stringTemplate = this.stManager.getTemplate( config.getTemplate() ) ;
             
             CodeGenConfig parentConfig = config.getParentConfig() ;
             if( parentConfig.getEnv() != null ) {
-                stringTemplate.add( "env", parentConfig.getEnv() ) ;
+                stringTemplate.setAttribute( "env", parentConfig.getEnv() ) ;
             }
             
             if( config.getParams() != null ) {
                 for( String key : config.getParams().keySet() ) {
-                    stringTemplate.add( key, config.getParams().get( key ) ) ;
+                    stringTemplate.setAttribute( key, config.getParams().get( key ) ) ;
                 }
             }
             
-            stringTemplate.add( "config", parentConfig ) ;
+            stringTemplate.setAttribute( "config", parentConfig ) ;
             
             return stringTemplate ;
         }
         catch( Exception e ) {
-            throw new Exception( "Error processing template - " + config.getTemplate() ) ;
+            throw new Exception( "Error processing template - " + 
+                                 config.getTemplate(), e ) ;
         }
-    }
-    
-    private String getTemplateContents() 
-        throws Exception {
-        
-        File templateBaseDir = null ;
-        File templateFile = null ;
-        String baseDirStr = config.getParentConfig().getTemplateDir() ;
-        
-        if( baseDirStr != null ) {
-            templateBaseDir = new File( baseDirStr ) ;
-        }
-        
-        if( templateBaseDir != null ) {
-            templateFile = new File( templateBaseDir, config.getTemplate() ) ;
-        }
-        else {
-            templateFile = new File( config.getTemplate() ) ;
-        }
-        
-        if( !templateFile.exists() ) {
-            throw new RuntimeException( "Template file " + 
-                                        templateFile.getAbsolutePath() + 
-                                        " does not exist." ) ;
-        }
-        
-        String fileContents = FileUtils.readFileToString( templateFile ) ;
-        return fileContents ;
     }
 }

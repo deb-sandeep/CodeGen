@@ -89,8 +89,11 @@ public class ConfigUtils {
                 String enrichedStrVal = enrichString( (String)value, config ) ;
                 list.set( i, enrichedStrVal ) ;
             }
-            else if( value instanceof List<?> ) {
+            else if( value instanceof List ) {
                 enrichList( ( List )value, config ) ;
+            }
+            else if( value instanceof Map ) {
+                enrichMap( ( Map )value, config ) ;
             }
         }
     }
