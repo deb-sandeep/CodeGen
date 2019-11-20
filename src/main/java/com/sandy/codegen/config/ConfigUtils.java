@@ -127,8 +127,16 @@ public class ConfigUtils {
     private static String processVar( String input, CodeGenConfig config ) 
             throws Exception {
         
-        String var = input.substring( 2, input.length()-1 ) ;
-        String enrichedVar = Ognl.getValue( var, config ).toString() ;
-        return enrichedVar ;
+        String varName = input.substring( 2, input.length()-1 ) ;
+        try {
+            Object varValue = Ognl.getValue( varName, config ) ;
+            if( varValue == null ) {
+                throw new RuntimeException( "Could not find config variable - " + varName ) ;
+            }
+            return varValue.toString() ;
+        }
+        catch( Exception e ) {
+            throw new Exception( "Error processing Ognl var " + varName, e ) ;
+        }
     }
 }

@@ -82,6 +82,7 @@ public class CodeGen {
         TransformationExecutor executor = null ;
         for( TransformationConfig tCfg : config.getTransformations() ) {
             log.debug( "\nExecuting transformation" ) ;
+            log.debug( "------------------------" ) ;
             log.debug( tCfg.getFormattedString( "" ) ) ;
             executor = new TransformationExecutor( tCfg ) ;
             executor.execute() ;

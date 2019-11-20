@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils ;
 import org.apache.log4j.Logger ;
 import org.stringtemplate.v4.ST ;
 
+import com.sandy.codegen.config.CodeGenConfig ;
 import com.sandy.codegen.config.TransformationConfig ;
 import com.sandy.common.util.StringUtil ;
 
@@ -47,14 +48,27 @@ public class TransformationExecutor {
         throws Exception {
         
         String templateContents = getTemplateContents() ;
-        ST stringTemplate = new ST( templateContents, '$', '$' ) ;
-        
-        stringTemplate.add( "env", config.getParentConfig().getEnv() ) ;
-        for( String key : config.getParams().keySet() ) {
-            stringTemplate.add( key, config.getParams().get( key ) ) ;
+        try {
+            ST stringTemplate = new ST( templateContents, '%', '%' ) ;
+            
+            CodeGenConfig parentConfig = config.getParentConfig() ;
+            if( parentConfig.getEnv() != null ) {
+                stringTemplate.add( "env", parentConfig.getEnv() ) ;
+            }
+            
+            if( config.getParams() != null ) {
+                for( String key : config.getParams().keySet() ) {
+                    stringTemplate.add( key, config.getParams().get( key ) ) ;
+                }
+            }
+            
+            stringTemplate.add( "config", parentConfig ) ;
+            
+            return stringTemplate ;
         }
-        
-        return stringTemplate ;
+        catch( Exception e ) {
+            throw new Exception( "Error processing template - " + config.getTemplate() ) ;
+        }
     }
     
     private String getTemplateContents() 
