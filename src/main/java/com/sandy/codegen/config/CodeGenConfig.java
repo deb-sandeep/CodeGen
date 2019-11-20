@@ -13,6 +13,7 @@ public class CodeGenConfig {
 
     private Map<String, Object> env = null ;
     private String templateDir = null ;
+    private String extHandlerDir = null ;
     private MkdirsConfig mkdirsConfig = null ;
     private List<TransformationConfig> transformations = null ;
 
@@ -30,6 +31,14 @@ public class CodeGenConfig {
 
     public void setTemplateDir( String templateDir ) {
         this.templateDir = templateDir ;
+    }
+
+    public String getExtHandlerDir() {
+        return extHandlerDir ;
+    }
+
+    public void setExtHandlerDir( String extHandlerDir ) {
+        this.extHandlerDir = extHandlerDir ;
     }
 
     public MkdirsConfig getMkdirsConfig() {
@@ -51,6 +60,7 @@ public class CodeGenConfig {
     public void enrichValues() throws Exception {
         enrichMap( env, this ) ;
         templateDir = enrichString( templateDir, this ) ;
+        extHandlerDir = enrichString( extHandlerDir, this ) ;
         
         if( mkdirsConfig != null ) {
             mkdirsConfig.setParentConfig( this ) ;
@@ -68,7 +78,8 @@ public class CodeGenConfig {
     public String toString() {
         StringBuilder builder = new StringBuilder( "CodeGenConfig -> {\n" ) ;
         builder.append( getFormattedMapContents( "baseAttributes", env, INDENT1 ) )
-               .append( INDENT1 + "templateDir : " + templateDir + "\n" ) ;
+               .append( INDENT1 + "templateDir : " + templateDir + "\n" ) 
+               .append( INDENT1 + "extHandlerDir : " + extHandlerDir + "\n" ) ;
         
         if( mkdirsConfig != null ) {
             builder.append( mkdirsConfig.getFormattedString( INDENT1 ) ) ;

@@ -10,6 +10,7 @@ public class TransformationConfig {
     
     private String template = null ;
     private String destination = null ;
+    private String extHandler = null ;
     private Map<String, Object> params = null ;
     
     public CodeGenConfig getParentConfig() {
@@ -34,6 +35,14 @@ public class TransformationConfig {
         this.destination = destination ;
     }
     
+    public String getExtHandler() {
+        return extHandler ;
+    }
+
+    public void setExtHandler( String extHandler ) {
+        this.extHandler = extHandler ;
+    }
+
     public Map<String, Object> getParams() {
         return params ;
     }
