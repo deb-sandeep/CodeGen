@@ -43,6 +43,8 @@ public class TransformationExecutor {
     private void executeConfig( TransformationConfig cfg ) 
         throws Exception {
         
+        enrichExtHandler( cfg ) ;
+        
         if( cfg.getExtHandler() != null ) {
             executeExtHandler( config ) ;
         }
@@ -57,6 +59,24 @@ public class TransformationExecutor {
         else {
             File destFile = getDestFile( cfg ) ;
             FileUtils.writeStringToFile( destFile, transformedContent ) ;
+        }
+    }
+    
+    private void enrichExtHandler( TransformationConfig cfg ) 
+        throws Exception {
+        
+        // If an extension handler is specified as a part of the
+        // transformation config, it takes precedence
+        if( cfg.getExtHandler() != null ) return ;
+        
+        // If an extension handler is not specified in the configuration,
+        // we check the first line in the template and see if the template
+        // specifies an embedded handler
+        String extHandler = stManager.getEmbeddedExtHandler( cfg.getTemplate() ) ;
+        log.debug( "Found embedded ext handler = " + extHandler ) ;
+        
+        if( StringUtil.isNotEmptyOrNull( extHandler ) ) {
+            cfg.setExtHandler( extHandler ) ;
         }
     }
     
@@ -110,10 +130,12 @@ public class TransformationExecutor {
         handlerOutput = ( List<TransformationConfig> )
                         invocable.invokeFunction( "execute", cfg ) ;
         
-        for( TransformationConfig tCfg : handlerOutput ) {
-            tCfg.setParentConfig( cfg.getParentConfig() ) ;
-            tCfg.enrichValues() ;
-            this.nestedConfigs.add( tCfg ) ;
+        if( handlerOutput != null ) {
+            for( TransformationConfig tCfg : handlerOutput ) {
+                tCfg.setParentConfig( cfg.getParentConfig() ) ;
+                tCfg.enrichValues() ;
+                this.nestedConfigs.add( tCfg ) ;
+            }
         }
     }
     
