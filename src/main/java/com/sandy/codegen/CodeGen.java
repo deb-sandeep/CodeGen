@@ -3,6 +3,7 @@ package com.sandy.codegen;
 import java.io.File ;
 import java.io.FileFilter ;
 import java.io.FileInputStream ;
+import java.util.Scanner ;
 
 import org.apache.log4j.Logger ;
 
@@ -10,6 +11,7 @@ import com.sandy.codegen.config.CodeGenConfig ;
 import com.sandy.codegen.config.ConfigLoader ;
 import com.sandy.codegen.config.MkdirsConfig ;
 import com.sandy.codegen.config.TransformationConfig ;
+import com.sandy.common.util.StringUtil ;
 
 public class CodeGen {
     
@@ -105,8 +107,21 @@ public class CodeGen {
             }
         }
         else {
-            System.err.println( "CodeGen : Usage" ) ;
-            System.err.println( "CodeGen <config file path>+" ) ;
+            File baseDir = new File( "/Users/sandeep/projects/source/CodeGenConfigs/angular-web-modules/configs" ) ;
+            Scanner scanner = new Scanner( System.in ) ;
+            System.out.print( "Enter the codegen config : " ) ;
+            String config = scanner.nextLine() ;
+            while( !config.equals( "exit" ) ) {
+                if( StringUtil.isNotEmptyOrNull( config ) ) {
+                    File cfgFile = new File( baseDir, config + ".yaml" ) ;
+                    CodeGen codeGen = new CodeGen( cfgFile ) ;
+                    codeGen.execute() ;
+                }
+                System.out.println( "\n\n------------------------------------" ) ;
+                System.out.print( "Enter the codegen config : " ) ;
+                config = scanner.nextLine() ;
+            }
+            scanner.close() ;
         }
     }
     

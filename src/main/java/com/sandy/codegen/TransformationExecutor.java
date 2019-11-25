@@ -73,9 +73,9 @@ public class TransformationExecutor {
         // we check the first line in the template and see if the template
         // specifies an embedded handler
         String extHandler = stManager.getEmbeddedExtHandler( cfg.getTemplate() ) ;
-        log.debug( "Found embedded ext handler = " + extHandler ) ;
         
         if( StringUtil.isNotEmptyOrNull( extHandler ) ) {
+            log.debug( "Found embedded ext handler = " + extHandler ) ;
             cfg.setExtHandler( extHandler ) ;
         }
     }
