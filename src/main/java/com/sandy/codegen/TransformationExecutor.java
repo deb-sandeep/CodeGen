@@ -34,6 +34,9 @@ public class TransformationExecutor {
     }
     
     public void execute() throws Exception {
+        log.debug( "\nExecuting transformation" ) ;
+        log.debug( "------------------------" ) ;
+        log.debug( config.getFormattedString( "" ) ) ;
         executeConfig( config ) ;
         for( TransformationConfig cfg : nestedConfigs ) {
             executeConfig( cfg ) ;
